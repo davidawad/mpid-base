@@ -74,7 +74,7 @@ function parseSheet(buffer) {
 }
 
 function writeDataToFile(data) {
-  const fileContent = `export const mpidData = ${JSON.stringify(data, null, 2)};`;
+  const fileContent = `export const mpidData = ${JSON.stringify(data, null, 2)};\n\nexport const lastRefreshed = "${new Date().toISOString()}";`;
   fs.writeFileSync(outputFilePath, fileContent);
 }
 

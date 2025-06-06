@@ -109,6 +109,7 @@ const Wrapper = styled.div`
 
 const List = styled.div`
   height: 100%;
+  padding-top: ${ITEM_HEIGHT}px;
   padding-bottom: 2rem;
 `;
 
@@ -125,10 +126,11 @@ const HeaderRow = styled.div`
   font-size: var(--text-size);
   border-bottom: 1px solid var(--border-color);
   height: ${ITEM_HEIGHT}px;
-  position: sticky;
+  position: fixed;
   top: 0;
   background: var(--slate-200);
   z-index: 1;
+  width: calc(100% - 36rem - ${SCROLLBAR_WIDTH}px);
 `;
 
 const RowWrapper = styled.div`

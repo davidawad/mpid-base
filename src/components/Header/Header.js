@@ -4,7 +4,8 @@ import {
   WIDTH_TO_SHOW_DOUBLE_HEIGHT,
   querySmallScreen,
 } from "../../../lib/constants";
-import { Code } from "../Icons/Icons";
+import { Code, Twitter, Bsky } from "../Icons/Icons";
+import { lastRefreshed } from "../../../lib/mpid-data";
 
 const Wrapper = styled.header`
   padding: 1rem 1rem 16px 24px;
@@ -117,12 +118,31 @@ function Header() {
         <TitleLink href="/">
           <Title>MPID Tracker</Title>
         </TitleLink>
-        <Subhead>Track and favorite MPIDs</Subhead>
+        <Subhead>
+          An MPID is a Market Participant Identifier, used to identify firms in
+          the stock market.
+        </Subhead>
+        <Subhead>
+          Data is sourced from the{" "}
+          <Link href="https://www.dtcc.com/-/media/Files/Downloads/client-center/NSCC/NSCC-MPID-Directory.xls">
+            DTCC NSCC MPID Directory
+          </Link>
+          .
+        </Subhead>
+        <Subhead>
+          Data last refreshed: {new Date(lastRefreshed).toLocaleString()}
+        </Subhead>
       </TitleSubhead>
       <SelfPromotion>
         <Socials>
-          <SocialLink href="https://github.com/davidawad/mpid-track">
+          <SocialLink href="https://github.com/davidawad/mpid-base">
             <Code />
+          </SocialLink>
+          <SocialLink href="https://twitter.com/realdavidawad">
+            <Twitter />
+          </SocialLink>
+          <SocialLink href="https://bsky.app/profile/davidawad.bsky.social">
+            <Bsky />
           </SocialLink>
         </Socials>
         <p>
