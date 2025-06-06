@@ -109,7 +109,6 @@ const Wrapper = styled.div`
 
 const List = styled.div`
   height: 100%;
-  padding-top: ${ITEM_HEIGHT}px;
   padding-bottom: 2rem;
 `;
 
@@ -120,17 +119,15 @@ const HeaderRow = styled.div`
   grid-template-columns: 0.5fr 1fr 3fr 1fr 0.5fr 0.5fr 0.5fr;
   gap: 0.25rem 0.5rem;
   align-items: center;
-  margin-left: ${SCROLLBAR_WIDTH}px;
   font-family: monospace;
   white-space: nowrap;
   font-size: var(--text-size);
   border-bottom: 1px solid var(--border-color);
   height: ${ITEM_HEIGHT}px;
-  position: fixed;
+  position: sticky;
   top: 0;
   background: var(--slate-200);
   z-index: 1;
-  width: calc(100% - 36rem - ${SCROLLBAR_WIDTH}px);
 `;
 
 const RowWrapper = styled.div`
@@ -143,7 +140,6 @@ const RowWrapper = styled.div`
   gap: 0.25rem 0.5rem;
   align-items: center;
 
-  margin-left: ${SCROLLBAR_WIDTH}px;
   font-family: monospace;
   white-space: nowrap;
   font-size: var(--text-size);
@@ -343,16 +339,16 @@ function Row({ mpid, isFaved, toggleFavedMPID, search }) {
 function MPIDDisplay({ mpids, favedMPIDs, toggleFavedMPID, search }) {
   return (
     <Wrapper>
+      <HeaderRow>
+        <Cell style={{ gridArea: "type" }}>Type</Cell>
+        <Cell style={{ gridArea: "mpid" }}>MPID</Cell>
+        <Cell style={{ gridArea: "brokerName" }}>Broker Name</Cell>
+        <Cell style={{ gridArea: "clearingBroker" }}>Clearing Broker</Cell>
+        <Cell style={{ gridArea: "favorite" }}>Favorite</Cell>
+        <Cell style={{ gridArea: "copy" }}>Copy</Cell>
+        <Cell style={{ gridArea: "copied" }}></Cell>
+      </HeaderRow>
       <List>
-        <HeaderRow>
-          <Cell style={{ gridArea: "type" }}>Type</Cell>
-          <Cell style={{ gridArea: "mpid" }}>MPID</Cell>
-          <Cell style={{ gridArea: "brokerName" }}>Broker Name</Cell>
-          <Cell style={{ gridArea: "clearingBroker" }}>Clearing Broker</Cell>
-          <Cell style={{ gridArea: "favorite" }}>Favorite</Cell>
-          <Cell style={{ gridArea: "copy" }}>Copy</Cell>
-          <Cell style={{ gridArea: "copied" }}></Cell>
-        </HeaderRow>
         {mpids.map((mpid, index) => {
           return (
             <Row
