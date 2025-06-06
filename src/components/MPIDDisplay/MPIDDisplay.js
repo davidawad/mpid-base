@@ -98,6 +98,7 @@ const Wrapper = styled.div`
   position: relative;
   outline: none;
   overflow-y: auto;
+  margin: 0 18rem;
 
   --text-size: 0.875rem;
 
@@ -109,6 +110,25 @@ const Wrapper = styled.div`
 const List = styled.div`
   height: 100%;
   padding-bottom: 2rem;
+`;
+
+const HeaderRow = styled.div`
+  display: grid;
+  padding: 0.25rem 0;
+  grid-template-areas: "type mpid brokerName clearingBroker favorite copy copied";
+  grid-template-columns: 0.5fr 1fr 3fr 1fr 0.5fr 0.5fr 0.5fr;
+  gap: 0.25rem 0.5rem;
+  align-items: center;
+  margin-left: ${SCROLLBAR_WIDTH}px;
+  font-family: monospace;
+  white-space: nowrap;
+  font-size: var(--text-size);
+  border-bottom: 1px solid var(--border-color);
+  height: ${ITEM_HEIGHT}px;
+  position: sticky;
+  top: 0;
+  background: var(--slate-200);
+  z-index: 1;
 `;
 
 const RowWrapper = styled.div`
@@ -228,7 +248,7 @@ function Row({ mpid, isFaved, toggleFavedMPID, search }) {
   const handleCopy = React.useCallback(async () => {
     clearTimeout(timeoutRef.current);
     await navigator.clipboard
-      .writeText(mpid.mpid)
+      .writeText(mpid.brokerName)
       .catch((e) => {
         console.error("error copying to clipboard", e);
         setJustCopied(0);
@@ -322,10 +342,19 @@ function MPIDDisplay({ mpids, favedMPIDs, toggleFavedMPID, search }) {
   return (
     <Wrapper>
       <List>
-        {mpids.map((mpid) => {
+        <HeaderRow>
+          <Cell style={{ gridArea: "type" }}>Type</Cell>
+          <Cell style={{ gridArea: "mpid" }}>MPID</Cell>
+          <Cell style={{ gridArea: "brokerName" }}>Broker Name</Cell>
+          <Cell style={{ gridArea: "clearingBroker" }}>Clearing Broker</Cell>
+          <Cell style={{ gridArea: "favorite" }}>Favorite</Cell>
+          <Cell style={{ gridArea: "copy" }}>Copy</Cell>
+          <Cell style={{ gridArea: "copied" }}></Cell>
+        </HeaderRow>
+        {mpids.map((mpid, index) => {
           return (
             <Row
-              key={mpid.mpid}
+              key={`${mpid.mpid}-${index}`}
               mpid={mpid}
               isFaved={favedMPIDs[mpid.mpid]}
               toggleFavedMPID={toggleFavedMPID}
