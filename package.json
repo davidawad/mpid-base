@@ -8,6 +8,7 @@
     "dev": "parcel public/index.html",
     "prebuild": "rimraf .parcel-cache dist",
     "build": "parcel build public/index.html",
+    "serve": "serve dist",
     "new-component": "new-component"
   },
   "keywords": [],
@@ -32,6 +33,7 @@
   },
   "browserslist": ">0.3%, defaults, supports es6-module",
   "devDependencies": {
+    "serve": "^14.2.0",
     "buffer": "^6.0.3",
     "events": "^3.3.0",
     "stream-browserify": "^3.0.0",
