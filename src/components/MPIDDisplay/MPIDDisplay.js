@@ -246,7 +246,7 @@ function Row({ mpid, isFaved, toggleFavedMPID, search }) {
   const handleCopy = React.useCallback(async () => {
     clearTimeout(timeoutRef.current);
     await navigator.clipboard
-      .writeText(mpid.brokerName)
+      .writeText(mpid.brokerName.trim())
       .catch((e) => {
         console.error("error copying to clipboard", e);
         setJustCopied(0);

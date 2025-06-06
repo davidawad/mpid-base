@@ -4,7 +4,7 @@ import {
   WIDTH_TO_SHOW_DOUBLE_HEIGHT,
   querySmallScreen,
 } from "../../../lib/constants";
-import { Code, Twitter, Bsky } from "../Icons/Icons";
+import { Code, Twitter, Bsky, LinkedIn } from "../Icons/Icons";
 import { lastRefreshed } from "../../../lib/mpid-data";
 
 const Wrapper = styled.header`
@@ -135,14 +135,33 @@ function Header() {
       </TitleSubhead>
       <SelfPromotion>
         <Socials>
-          <SocialLink href="https://github.com/davidawad/mpid-base">
+          <SocialLink
+            href="https://github.com/davidawad/mpid-base"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Code />
           </SocialLink>
-          <SocialLink href="https://twitter.com/realdavidawad">
+          <SocialLink
+            href="https://twitter.com/realdavidawad"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Twitter />
           </SocialLink>
-          <SocialLink href="https://bsky.app/profile/davidawad.bsky.social">
+          <SocialLink
+            href="https://bsky.app/profile/davidawad.bsky.social"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Bsky />
+          </SocialLink>
+          <SocialLink
+            href="https://www.linkedin.com/in/davidaawad/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <LinkedIn />
           </SocialLink>
         </Socials>
         <p>
