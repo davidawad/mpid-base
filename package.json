@@ -1,7 +1,7 @@
 {
-  "name": "every-uuid",
+  "name": "mpid-track",
   "version": "1.0.0",
-  "description": "in case I forget one",
+  "description": "Track and favorite MPIDs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "predev": "rimraf .parcel-cache dist",
@@ -11,9 +11,10 @@
     "new-component": "new-component"
   },
   "keywords": [],
-  "author": "nolen (eieio)",
+  "author": "davidawad",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.2",
     "eslint": "^8.57.1",
     "eslint-config-react-app": "^7.0.1",
     "new-component": "^5.0.3",
@@ -26,7 +27,8 @@
     "react-dom": "^18.3.1",
     "react-feather": "^2.0.10",
     "rimraf": "^6.0.1",
-    "styled-components": "^6.1.13"
+    "styled-components": "^6.1.13",
+    "xlsx": "^0.18.5"
   },
   "browserslist": ">0.3%, defaults, supports es6-module",
   "devDependencies": {

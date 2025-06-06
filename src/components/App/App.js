@@ -1,13 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import Header from "../Header/Header";
-import Scrollbar from "../Scrollbar/Scrollbar";
-import { MAX_UUID } from "../../../lib/constants";
-import UUIDDisplay from "../UUIDDisplay/UUIDDisplay";
+import MPIDDisplay from "../MPIDDisplay/MPIDDisplay";
 import SearchWidget from "../SearchWidget/SearchWidget";
 import FavoritesWidget from "../FavoritesWidget";
-import { indexToUUID, uuidToIndex } from "../../../lib/uuidTools";
-import JokeOverlay from "../JokeOverlay/JokeOverlay";
+import { useMpidSearch } from "../../../hooks/use-mpid-search";
+import { mpidData } from "../../../lib/mpid-data";
+import Scrollbar from "../Scrollbar/Scrollbar";
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -36,193 +36,40 @@ const Content = styled.div`
 `;
 
 function App() {
-  const [virtualPosition, setVirtualPosition] = React.useState(0n);
-  const [isAnimating, setIsAnimating] = React.useState(false);
-  const [targetPosition, setTargetPosition] = React.useState(null);
-  const [itemsToShow, setItemsToShow] = React.useState(40);
-  const [search, setSearch] = React.useState("");
-  const [searchDisplayed, setSearchDisplayed] = React.useState(false);
-  const [showFavorites, _setShowFavorites] = React.useState(false);
-  const animationRef = React.useRef(null);
-
-  const [favedUUIDs, setFavedUUIDs] = React.useState(
-    localStorage.getItem("favedUUIDs")
-      ? JSON.parse(localStorage.getItem("favedUUIDs"))
+  const [showFavorites, setShowFavorites] = React.useState(false);
+  const { search, results, searchMpins } = useMpidSearch();
+  const [favedMPIDs, setFavedMPIDs] = React.useState(
+    localStorage.getItem("favedMPIDs")
+      ? JSON.parse(localStorage.getItem("favedMPIDs"))
       : {}
   );
 
-  const setShowFavorites = React.useCallback(
-    (value) => {
-      setVirtualPosition(0n);
-      _setShowFavorites(value);
-    },
-    [_setShowFavorites]
-  );
-
-  const MAX_POSITION = React.useMemo(() => {
-    if (showFavorites) {
-      const itemsToShowBig = BigInt(itemsToShow);
-      const favedUUIDsLength = BigInt(Object.keys(favedUUIDs).length);
-      if (favedUUIDsLength > itemsToShowBig) {
-        return favedUUIDsLength - itemsToShowBig;
-      }
-      return 0n;
-    } else return MAX_UUID - BigInt(itemsToShow);
-  }, [itemsToShow, showFavorites, favedUUIDs]);
-
-  const toggleFavedUUID = (uuid) => {
-    setFavedUUIDs((prev) => {
-      const prevValue = prev[uuid] || false;
-      const newValue = !prevValue;
-      const newFavedUUIDs = { ...prev };
-      if (newValue) {
-        newFavedUUIDs[uuid] = true;
+  const toggleFavedMPID = (mpid) => {
+    setFavedMPIDs((prev) => {
+      const newFavedMPIDs = { ...prev };
+      if (newFavedMPIDs[mpid]) {
+        delete newFavedMPIDs[mpid];
       } else {
-        delete newFavedUUIDs[uuid];
+        newFavedMPIDs[mpid] = true;
       }
-
-      localStorage.setItem("favedUUIDs", JSON.stringify(newFavedUUIDs));
-      return newFavedUUIDs;
+      localStorage.setItem("favedMPIDs", JSON.stringify(newFavedMPIDs));
+      return newFavedMPIDs;
     });
   };
 
-  const animateToPosition = React.useCallback(
-    (targetPos) => {
-      setTargetPosition(targetPos);
-      setIsAnimating(true);
-    },
-    [setTargetPosition, setIsAnimating]
-  );
-
-  React.useEffect(() => {
-    if (isAnimating && targetPosition !== null) {
-      const startPosition = virtualPosition;
-      const startTime = performance.now();
-      const duration = 300;
-
-      const animate = () => {
-        // we can't use the currentTime provided by animate because it's not guaranteed
-        // to be after startTime!
-        const currentTime = performance.now();
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easeProgress = 1 - Math.pow(1 - progress, 4);
-        const currentPos =
-          startPosition +
-          ((targetPosition - startPosition) *
-            BigInt(Math.floor(easeProgress * 1000))) /
-            1000n;
-
-        setVirtualPosition(currentPos);
-
-        if (progress < 1) {
-          animationRef.current = requestAnimationFrame(animate);
-        } else {
-          setVirtualPosition(targetPosition);
-          setIsAnimating(false);
-          setTargetPosition(null);
-        }
-      };
-
-      animationRef.current = requestAnimationFrame(animate);
-
-      return () => {
-        if (animationRef.current) {
-          cancelAnimationFrame(animationRef.current);
-        }
-      };
+  const displayedMpids = React.useMemo(() => {
+    if (search) {
+      return results;
     }
-    // we intentionally want to save off an "old" copy of virtual position
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAnimating, targetPosition]);
-
-  const displayedUUIDs = React.useMemo(() => {
     if (showFavorites) {
-      const allUUIDs = Object.keys(favedUUIDs)
-        .map((uuid) => {
-          const index = uuidToIndex(uuid);
-          if (index === null) {
-            console.error("no index", uuid);
-            return null;
-          }
-          return {
-            index,
-            uuid,
-          };
-        })
-        .filter((item) => item !== null)
-        .sort((a, b) => {
-          const delta = a.index - b.index;
-          if (delta < 0n) return -1;
-          if (delta > 0n) return 1;
-          return 0;
-        });
-      let startIndex = virtualPosition;
-      let endIndex = startIndex + BigInt(itemsToShow);
-      if (startIndex > MAX_POSITION) {
-        startIndex = MAX_POSITION;
-      }
-      return allUUIDs.slice(Number(startIndex), Number(endIndex));
+      return mpidData.filter((mpid) => favedMPIDs[mpid.mpid]);
     }
-    return Array.from({ length: itemsToShow }, (_, i) => {
-      const index = virtualPosition + BigInt(i);
-      if (index < 0n) {
-        return null;
-      }
-      if (index > MAX_UUID) {
-        return null;
-      }
-      const uuid = indexToUUID(index);
-      if (!uuid) {
-        console.error("no uuid", index);
-        return null;
-      }
-      return { index, uuid };
-    });
-  }, [virtualPosition, itemsToShow, showFavorites, favedUUIDs, MAX_POSITION]);
-
-  const firstUuid = React.useMemo(() => {
-    if (showFavorites) {
-      return Object.keys(favedUUIDs)[0];
-    }
-    return indexToUUID(virtualPosition);
-  }, [virtualPosition, showFavorites, favedUUIDs]);
-
-  const [browserHash, setBrowserHash] = React.useState(null);
-
-  React.useEffect(() => {
-    setBrowserHash(window.location.hash);
-    const handleHashChange = () => {
-      setBrowserHash(window.location.hash);
-    };
-    window.addEventListener("hashchange", handleHashChange);
-    return () => {
-      window.removeEventListener("hashchange", handleHashChange);
-    };
-  }, []);
-
-  const hashContainsTheo = React.useMemo(() => {
-    if (!browserHash) {
-      return false;
-    }
-    const hash = browserHash.slice(1);
-    return hash.includes("theo");
-  }, [browserHash]);
+    return mpidData;
+  }, [search, results, showFavorites, favedMPIDs]);
 
   return (
     <>
-      {hashContainsTheo && <JokeOverlay firstUuid={firstUuid} />}
-      <SearchWidget
-        animateToPosition={animateToPosition}
-        virtualPosition={virtualPosition}
-        setVirtualPosition={setVirtualPosition}
-        search={search}
-        setSearch={setSearch}
-        searchDisplayed={searchDisplayed}
-        setSearchDisplayed={setSearchDisplayed}
-        displayedUUIDs={displayedUUIDs}
-        MAX_POSITION={MAX_POSITION}
-      />
+      <SearchWidget search={search} setSearch={searchMpins} />
       <FavoritesWidget
         setShowFavorites={setShowFavorites}
         isShowingFavorites={showFavorites}
@@ -231,29 +78,15 @@ function App() {
         <HeaderAndContent>
           <Header />
           <Content>
-            <UUIDDisplay
-              itemsToShow={itemsToShow}
-              setItemsToShow={setItemsToShow}
-              virtualPosition={virtualPosition}
-              setVirtualPosition={setVirtualPosition}
-              favedUUIDs={favedUUIDs}
-              toggleFavedUUID={toggleFavedUUID}
-              isAnimating={isAnimating}
-              MAX_POSITION={MAX_POSITION}
-              animateToPosition={animateToPosition}
+            <MPIDDisplay
+              mpids={displayedMpids}
+              favedMPIDs={favedMPIDs}
+              toggleFavedMPID={toggleFavedMPID}
               search={search}
-              searchDisplayed={searchDisplayed}
-              displayedUUIDs={displayedUUIDs}
             />
           </Content>
         </HeaderAndContent>
-        <Scrollbar
-          virtualPosition={virtualPosition}
-          MAX_POSITION={MAX_POSITION}
-          animateToPosition={animateToPosition}
-          setVirtualPosition={setVirtualPosition}
-          setIsAnimating={setIsAnimating}
-        />
+        <Scrollbar />
       </Wrapper>
     </>
   );

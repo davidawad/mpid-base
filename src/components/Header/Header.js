@@ -4,12 +4,7 @@ import {
   WIDTH_TO_SHOW_DOUBLE_HEIGHT,
   querySmallScreen,
 } from "../../../lib/constants";
-import { Code, Twitter, Bsky, Help } from "../Icons/Icons";
-const SUBHEADS = [
-  "In case you forgot one",
-  "Scroll till you find a good one",
-  "Well, only the V4 ones",
-];
+import { Code } from "../Icons/Icons";
 
 const Wrapper = styled.header`
   padding: 1rem 1rem 16px 24px;
@@ -115,40 +110,23 @@ const Socials = styled.div`
   }
 `;
 
-const V4Small = styled.sup`
-  font-size: 0.75rem;
-`;
-
 function Header() {
-  const subhead = React.useMemo(() => {
-    return SUBHEADS[Math.floor(Math.random() * SUBHEADS.length)];
-  }, []);
-
   return (
     <Wrapper>
       <TitleSubhead>
         <TitleLink href="/">
-          <Title>Every UUID Dot Com</Title>
+          <Title>MPID Tracker</Title>
         </TitleLink>
-        <Subhead>{subhead}</Subhead>
+        <Subhead>Track and favorite MPIDs</Subhead>
       </TitleSubhead>
       <SelfPromotion>
         <Socials>
-          <SocialLink href="https://eieio.games/blog/writing-down-every-uuid">
-            <Help />
-          </SocialLink>
-          <SocialLink href="https://github.com/nolenroyalty/every-uuid">
+          <SocialLink href="https://github.com/davidawad/mpid-track">
             <Code />
-          </SocialLink>
-          <SocialLink href="https://twitter.com/itseieio">
-            <Twitter />
-          </SocialLink>
-          <SocialLink href="https://bsky.app/profile/itseieio.bsky.social">
-            <Bsky />
           </SocialLink>
         </Socials>
         <p>
-          A website by <Link href="https://eieio.games">eieio</Link>
+          A website by <Link href="https://davidawad.com">davidawad</Link>
         </p>
       </SelfPromotion>
     </Wrapper>

@@ -9,8 +9,8 @@ const FavoritesButton = styled(UnstyledButton)`
   border-radius: 0 0 8px 8px;
   font-size: 0.875rem;
   font-family: monospace;
-  padding: .15rem 1rem;
-  width: 3rem;
+  padding: 0.15rem 1rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   position: absolute;
