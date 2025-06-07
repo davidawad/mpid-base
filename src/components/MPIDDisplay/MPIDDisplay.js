@@ -57,7 +57,7 @@ const CopyButton = styled(BaseButton)`
   }
 
   @media ${querySmallScreen} {
-    height: 2rem;
+    height: 1.5rem;
   }
 `;
 
@@ -96,7 +96,7 @@ const FavoriteButton = styled(BaseButton)`
   }
 
   @media ${querySmallScreen} {
-    height: 2rem;
+    height: 1.5rem;
   }
 `;
 
@@ -173,12 +173,11 @@ const RowWrapper = styled.div`
   transition: background-color 0.1s ease-in-out;
 
   @media ${querySmallScreen} {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 0.5fr 1fr 2fr 1fr;
     grid-template-areas:
-      "type mpid"
-      "brokerName clearingBroker"
-      "favorite copy";
-    grid-template-rows: auto auto auto;
+      "type mpid brokerName clearingBroker"
+      "favorite copy . .";
+    grid-template-rows: auto auto;
     height: auto;
     justify-content: center;
     gap: 0.25rem 0.5rem;
