@@ -55,6 +55,10 @@ const CopyButton = styled(BaseButton)`
   &:active {
     transform: scale(0.8);
   }
+
+  @media ${querySmallScreen} {
+    height: 2rem;
+  }
 `;
 
 const SpinStretch = keyframes`
@@ -90,6 +94,10 @@ const FavoriteButton = styled(BaseButton)`
         props.$isFaved ? "var(--yellow-100)" : "var(--yellow-500)"};
     }
   }
+
+  @media ${querySmallScreen} {
+    height: 2rem;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -101,6 +109,10 @@ const Wrapper = styled.div`
   margin: 0 18rem;
 
   --text-size: 0.875rem;
+
+  @media ${querySmallScreen} {
+    margin: 0 1rem;
+  }
 
   @media ${queryVerySmallScreen} {
     --text-size: 0.75rem;
@@ -115,8 +127,8 @@ const List = styled.div`
 const HeaderRow = styled.div`
   display: grid;
   padding: 0.25rem 0;
-  grid-template-areas: "type mpid brokerName clearingBroker favorite copy copied";
-  grid-template-columns: 0.5fr 1fr 3fr 1fr 0.5fr 0.5fr 0.5fr;
+  grid-template-areas: "type mpid brokerName clearingBroker favorite copy";
+  grid-template-columns: 0.5fr 1fr 3fr 1fr 0.5fr 0.5fr;
   gap: 0.25rem 0.5rem;
   align-items: center;
   font-family: monospace;
@@ -128,6 +140,11 @@ const HeaderRow = styled.div`
   top: 0;
   background: var(--slate-200);
   z-index: 1;
+
+  @media ${querySmallScreen} {
+    grid-template-areas: "type mpid brokerName";
+    grid-template-columns: 1fr 1fr 2fr;
+  }
 `;
 
 const RowWrapper = styled.div`
@@ -346,7 +363,6 @@ function MPIDDisplay({ mpids, favedMPIDs, toggleFavedMPID, search }) {
         <Cell style={{ gridArea: "clearingBroker" }}>Clearing Broker</Cell>
         <Cell style={{ gridArea: "favorite" }}>Favorite</Cell>
         <Cell style={{ gridArea: "copy" }}>Copy</Cell>
-        <Cell style={{ gridArea: "copied" }}></Cell>
       </HeaderRow>
       <List>
         {mpids.map((mpid, index) => {
