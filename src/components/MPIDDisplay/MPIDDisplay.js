@@ -142,8 +142,13 @@ const HeaderRow = styled.div`
   z-index: 1;
 
   @media ${querySmallScreen} {
-    grid-template-areas: "type mpid brokerName";
-    grid-template-columns: 1fr 1fr 2fr;
+    grid-template-areas: "type mpid brokerName clearingBroker";
+    grid-template-columns: 1fr 1fr 2fr 1fr;
+
+    & > [style*="grid-area: favorite"],
+    & > [style*="grid-area: copy"] {
+      display: none;
+    }
   }
 `;
 
