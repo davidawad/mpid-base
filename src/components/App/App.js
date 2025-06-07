@@ -6,7 +6,6 @@ import SearchWidget from "../SearchWidget/SearchWidget";
 import FavoritesWidget from "../FavoritesWidget";
 import { useMpidSearch } from "../../../hooks/use-mpid-search";
 import { mpidData } from "../../../lib/mpid-data";
-import Scrollbar from "../Scrollbar/Scrollbar";
 
 const Wrapper = styled.div`
   display: flex;
@@ -86,7 +85,6 @@ function App() {
             />
           </Content>
         </HeaderAndContent>
-        <Scrollbar />
       </Wrapper>
     </>
   );
